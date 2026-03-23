@@ -1,6 +1,6 @@
 function Logo() {
   return (
-    <div className="px-4 py-3 bg-neutral-100">
+    <div className="bg-secondary px-4 py-3 md:px-8 md:py-4 lg:hidden">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="95"

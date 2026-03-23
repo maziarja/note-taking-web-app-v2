@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Serif, Source_Code_Pro } from "next/font/google";
+import { Inter, Noto_Serif, Source_Code_Pro, Geist } from "next/font/google";
 import "./globals.css";
 import Logo from "@/components/shared/Logo";
+import { NoteProvider } from "./_context/NoteContext";
+import BottomNav from "@/components/shared/BottomNav";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,11 +39,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sourceCodePro.variable} ${notoSerif.variable} ${inter.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", sourceCodePro.variable, notoSerif.variable, inter.variable, "font-sans", geist.variable)}
     >
-      <body>
-        <Logo />
-        {children}
+      <body className="bg-secondary flex min-h-dvh flex-col">
+        <NoteProvider>
+          <Logo />
+          {children}
+          <BottomNav />
+        </NoteProvider>
       </body>
     </html>
   );
