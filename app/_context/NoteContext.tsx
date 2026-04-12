@@ -15,7 +15,11 @@ const initialState = {
   notes: initialNotes.notes,
 };
 
-type Action = { type: "added_note" } | { type: "deleted_note" };
+type Action =
+  | { type: "added_note"; payload: NoteType }
+  | { type: "deleted_note"; payload: string }
+  | { type: "toggled_restore_note"; payload: string }
+  | { type: "updated_note_content"; id: string; payload: string };
 
 type State = {
   notes: NoteType[];
@@ -24,10 +28,35 @@ type State = {
 function reducer(state: State, action: Action) {
   switch (action.type) {
     case "added_note": {
-      return state;
+      return {
+        ...state,
+        notes: [...state.notes, action.payload],
+      };
     }
     case "deleted_note": {
-      return state;
+      return {
+        ...state,
+        notes: state.notes.filter((note) => note.id !== action.payload),
+      };
+    }
+    case "toggled_restore_note": {
+      return {
+        ...state,
+        notes: state.notes.map((note) =>
+          note.id === action.payload
+            ? { ...note, isArchived: !note.isArchived }
+            : note,
+        ),
+      };
+    }
+
+    case "updated_note_content": {
+      return {
+        ...state,
+        notes: state.notes.map((note) =>
+          note.id === action.id ? { ...note, content: action.payload } : note,
+        ),
+      };
     }
 
     default: {

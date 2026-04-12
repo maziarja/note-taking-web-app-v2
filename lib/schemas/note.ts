@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const noteSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   tags: z.array(z.string()),
   content: z.string(),

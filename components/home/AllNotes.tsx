@@ -7,8 +7,8 @@ function AllNotes() {
   const { notes } = useNote();
 
   return (
-    <div className="space-y divide-y pb-10 md:pb-14">
-      {notes.slice(0, 3).map((note) => (
+    <div className="space-y-1 divide-y pb-10 md:pb-14">
+      {notes.map((note) => (
         <div key={note.id} className="py-1">
           <NoteCard note={note} key={note.id} />
         </div>

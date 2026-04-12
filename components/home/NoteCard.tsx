@@ -1,32 +1,55 @@
+"use client";
+
+import { useNoteUI } from "@/app/_context/NoteUIContext";
 import { NoteType } from "@/lib/schemas/note";
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 type Props = {
   note: NoteType;
+  className?: string;
+  isDesktop?: boolean;
 };
 
-function NoteCard({ note }: Props) {
+function NoteCard({ note, className, isDesktop }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { setNoteId } = useNoteUI();
   const lastEdited = new Date(note.lastEdited).toLocaleString("en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
   });
 
+  function handleClickNoteCard() {
+    if (!isDesktop) router.push(`/note/${note.id}`);
+    if (isDesktop) {
+      setNoteId(note.id);
+      if (pathname !== "/") router.push("/");
+    }
+  }
+
   return (
-    <Link href={`/note/${note.id}`} className="block space-y-3 p-2">
-      <p className="text-preset-3">{note.title}</p>
-      <div className="inline-flex gap-1">
-        {note.tags.map((tag, i) => (
-          <div
-            key={`${tag}-${i}`}
-            className="bg-muted text-preset-6 rounded-sm px-1.5 py-0.5 capitalize"
-          >
-            {tag}
-          </div>
-        ))}
+    <>
+      <div
+        role="button"
+        onClick={handleClickNoteCard}
+        className={`${className} block cursor-pointer space-y-3 p-2`}
+      >
+        <p className="text-preset-3">{note.title}</p>
+        <div className="inline-flex gap-1">
+          {note?.tags?.length > 0 &&
+            note.tags.map((tag, i) => (
+              <div
+                key={`${tag}-${i}`}
+                className="bg-muted text-preset-6 rounded-sm px-1.5 py-0.5 capitalize"
+              >
+                {tag}
+              </div>
+            ))}
+        </div>
+        <p className="text-preset-6 text-text-mute">{lastEdited}</p>
       </div>
-      <p className="text-preset-6 text-text-mute">{lastEdited}</p>
-    </Link>
+    </>
   );
 }
 
