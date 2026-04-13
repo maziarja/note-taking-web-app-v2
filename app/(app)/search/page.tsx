@@ -10,6 +10,8 @@ function Page() {
       <h1>Search</h1>
       <Suspense fallback={null}>
         <SearchInput />
+      </Suspense>
+      <Suspense fallback={null}>
         <NotesSearchResults />
       </Suspense>
       <CreateNoteButton />
