@@ -5,7 +5,9 @@ import { Suspense } from "react";
 function Page() {
   return (
     <Container className="rounded-t-none">
-      <CreateNewNote />
+      <Suspense fallback={null}>
+        <CreateNewNote />
+      </Suspense>
     </Container>
   );
 }
