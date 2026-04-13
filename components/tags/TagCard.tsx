@@ -1,7 +1,6 @@
 "use client";
 
 import { useNote } from "@/app/_context/NoteContext";
-import { useTag } from "@/app/_context/NoteUIContext";
 import { TagIcon } from "lucide-react";
 import Link from "next/link";
 
