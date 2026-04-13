@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import NoteDetails from "@/components/note/NoteDetails";
 import Container from "@/components/ui/Container";
 
