@@ -4,16 +4,16 @@ import { useNote } from "@/app/_context/NoteContext";
 import NoteCard from "../home/NoteCard";
 import { useNoteUI } from "@/app/_context/NoteUIContext";
 import { ScrollArea } from "../ui/scroll-area";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 
 function NoteList() {
-  const { notes } = useNote();
-  const { tag, noteId, isArchivedNotes, setNoteId } = useNoteUI();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
+  const { notes } = useNote();
+  const { tag, noteId, isArchivedNotes, setNoteId } = useNoteUI();
 
   const tagSelectedNotes = notes.filter((note) => note.tags.includes(tag));
 

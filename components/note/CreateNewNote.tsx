@@ -49,11 +49,9 @@ function CreateNewNote({ isDesktop = false }) {
       toast.error("Please add a title, tags, and note content before saving.");
       return;
     }
-    // const id = crypto.randomUUID();
-    const id =
-      typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : Math.random().toString(36).slice(2);
+
+    const id = crypto.randomUUID();
+
     dispatch({
       type: "added_note",
       payload: {

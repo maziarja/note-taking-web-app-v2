@@ -1,13 +1,13 @@
 "use client";
 
 import { useNote } from "@/app/_context/NoteContext";
-import { useSearchParams } from "next/navigation";
 import NoteCard from "../home/NoteCard";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 function NotesSearchResults() {
-  const searchParams = useSearchParams();
   const { notes } = useNote();
+  const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
   const notesSearchResults = query

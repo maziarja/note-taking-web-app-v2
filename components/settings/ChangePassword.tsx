@@ -1,5 +1,3 @@
-import Container from "../ui/Container";
-
 function ChangePassword() {
   return (
     <>

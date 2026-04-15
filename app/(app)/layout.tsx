@@ -1,4 +1,3 @@
-import UserAccountButton from "@/components/auth/UserAccountButton";
 import BottomNav from "@/components/shared/BottomNav";
 import Logo from "@/components/shared/Header";
 

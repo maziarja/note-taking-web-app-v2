@@ -71,7 +71,7 @@ function NoteDetails({ isDesktop = false }: Props) {
   }
   if (!currentNote) return null;
   return (
-    <div className="flex h-full flex-col gap-3 py-5">
+    <div className="flex h-full flex-col gap-3">
       {!isDesktop && (
         <NoteActions
           noteId={currentNote?.id}

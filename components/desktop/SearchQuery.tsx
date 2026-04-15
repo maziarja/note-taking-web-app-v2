@@ -7,10 +7,10 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useNoteUI } from "@/app/_context/NoteUIContext";
 
 function SearchQuery() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") || "";
   const pathname = usePathname();
   const { tag, isArchivedNotes } = useNoteUI();
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query");
 
   return (
     <div className="flex h-20.25 items-center justify-between border-b pr-6 pl-8">

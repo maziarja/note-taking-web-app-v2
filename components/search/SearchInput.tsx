@@ -8,22 +8,25 @@ import {
 import { SearchIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-function SearchInput({ isDesktop = false }) {
+type Props = {
+  isDesktop?: boolean;
+};
+
+function SearchInput({ isDesktop = false }: Props) {
   const searchParams = useSearchParams();
+  const query = searchParams.get("query") || "";
   const params = new URLSearchParams(searchParams);
   const router = useRouter();
-  const query = searchParams.get("query");
-
   function handleChangeInput(
     e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
   ) {
     const value = e.target.value;
     if (value) {
-      params.set("query", value);
+      params?.set("query", value);
     } else {
-      params.delete("query");
+      params?.delete("query");
     }
-    router.push(`?${params.toString()}`);
+    router.push(`?${params?.toString()}`);
   }
 
   return (

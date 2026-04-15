@@ -1,6 +1,7 @@
 import FontTheme from "@/components/settings/FontTheme";
+import Container from "@/components/ui/Container";
 
-function Page() {
+function page() {
   return (
     <div className="hidden h-full px-6 py-5 lg:block">
       <FontTheme />
@@ -8,4 +9,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default page;
