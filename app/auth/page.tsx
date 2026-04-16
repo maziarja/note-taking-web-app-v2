@@ -1,7 +1,13 @@
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-function Page() {
-  redirect("/");
+async function Page() {
+  const session = await auth();
+  if (session) {
+    redirect("/");
+  } else {
+    redirect("/auth/login");
+  }
 }
 
 export default Page;

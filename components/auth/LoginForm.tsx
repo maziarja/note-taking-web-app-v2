@@ -13,6 +13,7 @@ import {
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { login } from "@/app/_actions/auth/login";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,13 +21,16 @@ function LoginForm() {
   const form = useForm<UserType>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "mazi@gmail.com",
+      password: "mazimazi",
     },
   });
 
-  function onSubmit(data: UserType) {
-    console.log(data);
+  async function onSubmit(data: UserType) {
+    const result = await login(data);
+    if (result?.error) {
+      form.setError("root", { message: result.error });
+    }
   }
 
   return (
@@ -76,6 +80,11 @@ function LoginForm() {
           </Field>
         )}
       />
+      {form.formState.errors.root && (
+        <FieldError
+          errors={[{ message: form.formState.errors.root.message }]}
+        />
+      )}
       <Button size={"xl"} className="w-full">
         Login
       </Button>

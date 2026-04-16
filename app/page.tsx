@@ -3,10 +3,13 @@ import BottomNav from "@/components/shared/BottomNav";
 import CreateNoteButton from "@/components/shared/CreateNoteButton";
 import Logo from "@/components/shared/Header";
 import Container from "@/components/ui/Container";
-import connectDB from "@/lib/database";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 async function Page() {
-  connectDB();
+  const session = await auth();
+  console.log(session);
+  if (!session) redirect("auth/login");
   return (
     <>
       <Logo className="lg:hidden" />

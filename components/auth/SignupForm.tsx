@@ -13,20 +13,30 @@ import {
 } from "../ui/input-group";
 import { EyeIcon, EyeOffIcon, InfoIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { signup } from "@/app/_actions/auth/signup";
+import { Spinner } from "../ui/spinner";
+import { login } from "@/app/_actions/auth/login";
 
 function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
-
   const form = useForm<UserType>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "mazi@gmail.com",
+      password: "mazimazi",
     },
   });
 
-  function onSubmit(data: UserType) {
-    console.log(data);
+  async function onSubmit(data: UserType) {
+    const result = await signup(data);
+
+    if (result.success) {
+      await login(data);
+    }
+
+    if (result?.error) {
+      form.setError("root", { message: result.error });
+    }
   }
 
   return (
@@ -78,8 +88,14 @@ function SignupForm() {
           </Field>
         )}
       />
+      {form.formState.errors.root && (
+        <FieldError
+          errors={[{ message: form.formState.errors.root.message }]}
+        />
+      )}
+
       <Button size={"xl"} className="w-full">
-        Sign up
+        {form.formState.isSubmitting ? <Spinner /> : "Sign up"}
       </Button>
     </form>
   );

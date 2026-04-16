@@ -3,9 +3,15 @@ import LoginForm from "@/components/auth/LoginForm";
 import Logo from "@/components/shared/Header";
 import LogoIcon from "@/components/shared/LogoIcon";
 import { Separator } from "@/components/ui/separator";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-function Page() {
+async function Page() {
+  const session = await auth();
+  if (session) {
+    redirect("/");
+  }
   return (
     <div className="bg-background flex flex-col items-center gap-4 rounded-xl border px-4 py-10 shadow-[0_8px_12px_0_#f0f0f099] md:px-8 md:py-12 lg:p-12 dark:shadow-none">
       <LogoIcon />
