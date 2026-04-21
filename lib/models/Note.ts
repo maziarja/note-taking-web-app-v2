@@ -1,6 +1,6 @@
 import mongoose, { Model, models, Schema, Types } from "mongoose";
 
-type NoteDocument = {
+export type NoteDocument = {
   _id: Types.ObjectId;
   title: string;
   content: string;

@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import connectDB from "@/lib/database";
 import { Notes } from "@/lib/models/Note";
 import { notesSchema } from "@/lib/schemas/note";
+import { NoteDocument } from "@/lib/models/Note";
 
 export async function getDBNotes() {
   try {
@@ -13,7 +14,7 @@ export async function getDBNotes() {
 
     if (!userNotes) return;
 
-    const plainDBNotes = userNotes.notes.map((note) => {
+    const plainDBNotes = userNotes.notes.map((note: NoteDocument) => {
       return {
         ...note,
         id: note._id.toString(),
