@@ -4,6 +4,8 @@ import Google from "next-auth/providers/google";
 import { User } from "./models/User";
 import bcrypt from "bcryptjs";
 import connectDB from "./database";
+import initialNotes from "@/data.json";
+import { importNotesToDB } from "@/app/_actions/note/importNotesToDB";
 
 const credentialProvider = Credentials({
   credentials: {
@@ -45,6 +47,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               email: user.email,
             });
             await newUser.save();
+
+            await importNotesToDB(initialNotes.notes, newUser._id.toString());
+
             user.id = newUser._id.toString();
           } else {
             user.id = currentUser._id.toString();

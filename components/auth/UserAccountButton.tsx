@@ -29,7 +29,6 @@ function UserAccountButton({ isLoggedIn }: Props) {
               <CircleUserRoundIcon />
             </Button>
           </DropdownMenuTrigger>
-
           <DropdownMenuContent
             align="end"
             className="shadow-2xl drop-shadow-xl"

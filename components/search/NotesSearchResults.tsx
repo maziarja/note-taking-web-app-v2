@@ -4,6 +4,7 @@ import { useNote } from "@/app/_context/NoteContext";
 import NoteCard from "../home/NoteCard";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import EmptyStatesSearchedNotes from "./EmptyStatesSearchedNotes";
 
 function NotesSearchResults() {
   const { notes } = useNote();
@@ -22,16 +23,7 @@ function NotesSearchResults() {
     : [];
 
   if (query && notesSearchResults.length === 0) {
-    return (
-      <div className="bg-secondary rounded-lg border p-2">
-        <p className="text-preset-5">
-          No notes match your search. Try a different keyword or{" "}
-          <Link href={"/"} className="underline underline-offset-2">
-            create a new note.
-          </Link>
-        </p>
-      </div>
-    );
+    return <EmptyStatesSearchedNotes />;
   }
 
   return (

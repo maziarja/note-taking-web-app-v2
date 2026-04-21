@@ -13,7 +13,7 @@ type Props = {
 function NoteCard({ note, className, isDesktop }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-  const { setNoteId } = useNoteUI();
+  const { setNoteId, setShowCreateNote } = useNoteUI();
   const lastEdited = new Date(note.lastEdited).toLocaleString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -21,10 +21,12 @@ function NoteCard({ note, className, isDesktop }: Props) {
   });
 
   function handleClickNoteCard() {
-    if (!isDesktop) router.push(`/note/${note.id}`);
+    if (!isDesktop) router.push(`/app/note/${note.id}`);
     if (isDesktop) {
       setNoteId(note.id);
-      if (pathname !== "/") router.push("/");
+      setShowCreateNote(false);
+
+      if (pathname !== "/app") router.push("/app");
     }
   }
 

@@ -1,5 +1,4 @@
 import mongoose, { Model, models, Schema } from "mongoose";
-import { unique } from "next/dist/build/utils";
 
 type User = {
   email: string;

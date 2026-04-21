@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { useNoteUI } from "@/app/_context/NoteUIContext";
 
-function CreateNewNote({ isDesktop = false }) {
+function CreateNewNote() {
   const [content, setContent] = useState("");
   const { dispatch } = useNote();
   const { setNoteId } = useNoteUI();
@@ -71,30 +71,28 @@ function CreateNewNote({ isDesktop = false }) {
 
   return (
     <form onSubmit={handleSubmitForm} className="space-y-3">
-      {!isDesktop && (
-        <div className="flex items-center justify-between border-b pb-3">
+      <div className="flex items-center justify-between border-b pb-3 lg:hidden">
+        <button
+          type="button"
+          onClick={router.back}
+          className="text-secondary-foreground text-preset-5 flex cursor-pointer items-center gap-1"
+        >
+          <ChevronLeft className="size-4.5" />
+          <span>Go Back</span>
+        </button>
+        <div className="text-preset-5 flex items-center gap-4">
           <button
             type="button"
             onClick={router.back}
-            className="text-secondary-foreground text-preset-5 flex cursor-pointer items-center gap-1"
+            className="text-secondary-foreground cursor-pointer"
           >
-            <ChevronLeft className="size-4.5" />
-            <span>Go Back</span>
+            Cancel
           </button>
-          <div className="text-preset-5 flex items-center gap-4">
-            <button
-              type="button"
-              onClick={router.back}
-              className="text-secondary-foreground cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button type="submit" className="cursor-pointer text-blue-500">
-              Save Note
-            </button>
-          </div>
+          <button type="submit" className="cursor-pointer text-blue-500">
+            Save Note
+          </button>
         </div>
-      )}
+      </div>
       <input
         name="title"
         className="text-preset-2 placeholder:text-foreground outline-none"
@@ -132,28 +130,26 @@ function CreateNewNote({ isDesktop = false }) {
         />
       </ScrollArea>
 
-      {isDesktop && (
-        <div className="mt-auto space-y-4">
-          <Separator />
-          <div className="space-x-4">
-            <Button
-              type="submit"
-              size={"xl"}
-              className="text-preset-4! cursor-pointer"
-            >
-              Save Note
-            </Button>
-            <Button
-              type="button"
-              size={"xl"}
-              variant={"secondary"}
-              className="text-preset-4! cursor-pointer"
-            >
-              Cancel
-            </Button>
-          </div>
+      <div className="mt-auto hidden space-y-4 lg:block">
+        <Separator />
+        <div className="space-x-4">
+          <Button
+            type="submit"
+            size={"xl"}
+            className="text-preset-4! cursor-pointer"
+          >
+            Save Note
+          </Button>
+          <Button
+            type="button"
+            size={"xl"}
+            variant={"secondary"}
+            className="text-preset-4! cursor-pointer"
+          >
+            Cancel
+          </Button>
         </div>
-      )}
+      </div>
     </form>
   );
 }

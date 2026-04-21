@@ -16,9 +16,12 @@ import { Button } from "../ui/button";
 import { signup } from "@/app/_actions/auth/signup";
 import { Spinner } from "../ui/spinner";
 import { login } from "@/app/_actions/auth/login";
+import { importNotesToDB } from "@/app/_actions/note/importNotesToDB";
+import { useNote } from "@/app/_context/NoteContext";
 
 function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const { notes } = useNote();
   const form = useForm<UserType>({
     resolver: zodResolver(userSchema),
     defaultValues: {
@@ -31,6 +34,8 @@ function SignupForm() {
     const result = await signup(data);
 
     if (result.success) {
+      await importNotesToDB(notes, result.userId);
+
       await login(data);
     }
 

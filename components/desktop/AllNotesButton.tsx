@@ -5,26 +5,21 @@ import { ChevronRightIcon, HomeIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 function AllNotesButton() {
-  const router = useRouter();
   const pathname = usePathname();
-  const { setTag, setIsArchivedNotes, isArchivedNotes, tag } = useNoteUI();
+  const { tag, noteMode, noteState } = useNoteUI();
 
   return (
     <div
       role="button"
-      onClick={() => {
-        setTag("");
-        setIsArchivedNotes(false);
-        if (pathname !== "/") router.push("/");
-      }}
-      className={`${!isArchivedNotes && !tag && pathname === "/" ? "bg-secondary" : ""} text-text-mute text-preset-4 flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5`}
+      onClick={() => noteState("all")}
+      className={`${noteMode === "allNotes" && !tag && pathname === "/app" ? "bg-secondary" : ""} text-text-mute text-preset-4 flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5`}
     >
       <HomeIcon
         size={20}
-        className={`${!isArchivedNotes && pathname === "/" && !tag ? "text-blue-500" : "text-text-mute"}`}
+        className={`${noteMode === "allNotes" && pathname === "/app" && !tag ? "text-blue-500" : "text-text-mute"}`}
       />
       <span>All Notes</span>
-      {!isArchivedNotes && !tag && pathname === "/" && (
+      {noteMode === "allNotes" && !tag && pathname === "/app" && (
         <ChevronRightIcon className="ml-auto size-4" />
       )}
     </div>

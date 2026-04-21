@@ -2,7 +2,6 @@
 
 import { SettingsIcon } from "lucide-react";
 import SearchInput from "../search/SearchInput";
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useNoteUI } from "@/app/_context/NoteUIContext";
 
@@ -10,22 +9,46 @@ function SearchQuery() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const pathname = usePathname();
-  const { tag, isArchivedNotes } = useNoteUI();
+  const {
+    tag,
+    setShowSettings,
+    noteMode,
+    setNoteId,
+    setNoteMode,
+    showSettings,
+    setTag,
+    setShowCreateNote,
+  } = useNoteUI();
+
+  function handleClickSettings() {
+    setShowSettings("color-theme");
+    setShowCreateNote(false);
+    setNoteMode("");
+    setTag("");
+    setNoteId("");
+  }
 
   return (
     <div className="flex h-20.25 items-center justify-between border-b pr-6 pl-8">
       <p className="text-preset-1">
-        {pathname === "/" && !isArchivedNotes && !tag && !query && "All Notes"}
-        {pathname === "/note/createNewNote" && !query && "All Notes"}
-        {pathname === "/" && isArchivedNotes && !query && "Archived Notes"}
-        {pathname === "/" && tag && !query && (
+        {pathname === "/app" &&
+          noteMode === "allNotes" &&
+          !tag &&
+          !query &&
+          !showSettings &&
+          "All Notes"}
+        {pathname === "/app" &&
+          noteMode === "archivedNotes" &&
+          !query &&
+          "Archived Notes"}
+        {pathname === "/app" && tag && !query && (
           <>
             <span className="text-secondary-foreground">Notes Tagged:</span>{" "}
             {tag}{" "}
           </>
         )}
-        {pathname.startsWith("/settings") && "Settings"}
-        {query && (
+        {showSettings && "Settings"}
+        {query && !showSettings && (
           <>
             <span className="text-secondary-foreground">
               Showing results for:
@@ -38,12 +61,12 @@ function SearchQuery() {
         <div className="w-75">
           <SearchInput isDesktop={true} />
         </div>
-        <Link
-          href={"/settings/color-theme"}
+        <button
+          onClick={handleClickSettings}
           className="flex items-center justify-center"
         >
           <SettingsIcon className="text-secondary-foreground" />
-        </Link>
+        </button>
       </div>
     </div>
   );

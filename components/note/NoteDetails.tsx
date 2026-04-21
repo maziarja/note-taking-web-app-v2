@@ -13,12 +13,9 @@ import { useNoteUI } from "@/app/_context/NoteUIContext";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { toast } from "sonner";
+import { updateNote } from "@/app/_actions/note/updateNote";
 
-type Props = {
-  isDesktop?: boolean;
-};
-
-function NoteDetails({ isDesktop = false }: Props) {
+function NoteDetails() {
   const { notes, dispatch } = useNote();
   const { id: noteId } = useParams();
   const { noteId: noteIdForDesktop } = useNoteUI();
@@ -26,6 +23,8 @@ function NoteDetails({ isDesktop = false }: Props) {
   const currentNote = notes.find((note) => note.id === ids);
 
   const [content, setContent] = useState(currentNote?.content);
+
+  const [title, setTitle] = useState(currentNote?.title);
 
   const lastEdited = currentNote?.lastEdited as string;
 
@@ -49,6 +48,10 @@ function NoteDetails({ isDesktop = false }: Props) {
   });
 
   useEffect(() => {
+    if (currentNote) setTitle(currentNote.title);
+  }, [currentNote]);
+
+  useEffect(() => {
     if (editor && currentNote)
       editor.commands.setContent(currentNote?.content, {
         emitUpdate: false,
@@ -59,28 +62,67 @@ function NoteDetails({ isDesktop = false }: Props) {
       });
   }, [editor, currentNote?.content]);
 
-  function handleSaveNote() {
-    if (ids && content) {
+  async function handleSaveNote() {
+    const prevTitle = currentNote?.title;
+    const prevContent = currentNote?.content;
+
+    if (ids && currentNote) {
       dispatch({
         type: "updated_note_content",
-        id: ids,
-        payload: content,
+        payload: {
+          noteId: ids,
+          content: content || currentNote.content,
+          title: title || currentNote.title,
+        },
       });
-      toast.success("Note saved successfully!");
+
+      try {
+        const updatedNote = {
+          id: ids,
+          title: title || currentNote.title,
+          content: content || currentNote.content,
+        };
+
+        await updateNote(updatedNote);
+
+        toast.success("Note saved successfully!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to save. Changes reverted.");
+
+        if (prevContent && prevTitle)
+          dispatch({
+            type: "updated_note_content",
+            payload: {
+              noteId: ids,
+              content: prevContent,
+              title: prevTitle,
+            },
+          });
+      }
     }
   }
+
+  // update last Edited when update a note
+
   if (!currentNote) return null;
   return (
     <div className="flex h-full flex-col gap-3">
-      {!isDesktop && (
+      <div className="lg:hidden">
         <NoteActions
           noteId={currentNote?.id}
           handleSaveNote={handleSaveNote}
           isArchived={currentNote?.isArchived}
         />
-      )}
+      </div>
+
       <div className="space-y-3">
-        <p className="text-preset-1">{currentNote?.title}</p>
+        <textarea
+          className="text-preset-1 field-sizing-content resize-none outline-none"
+          value={title}
+          key={currentNote.id}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
         <div className="space-y-1">
           <div className="text-preset-6 text-text-mute flex items-center gap-4 py-1">
@@ -125,27 +167,25 @@ function NoteDetails({ isDesktop = false }: Props) {
         </ScrollArea>
       </div>
 
-      {isDesktop && (
-        <div className="mt-auto space-y-4">
-          <Separator />
-          <div className="space-x-4">
-            <Button
-              onClick={handleSaveNote}
-              size={"xl"}
-              className="text-preset-4! cursor-pointer"
-            >
-              Save Note
-            </Button>
-            <Button
-              size={"xl"}
-              variant={"secondary"}
-              className="text-preset-4! cursor-pointer"
-            >
-              Cancel
-            </Button>
-          </div>
+      <div className="mt-auto hidden space-y-4 lg:block">
+        <Separator />
+        <div className="space-x-4">
+          <Button
+            onClick={handleSaveNote}
+            size={"xl"}
+            className="text-preset-4! cursor-pointer"
+          >
+            Save Note
+          </Button>
+          <Button
+            size={"xl"}
+            variant={"secondary"}
+            className="text-preset-4! cursor-pointer"
+          >
+            Cancel
+          </Button>
         </div>
-      )}
+      </div>
     </div>
   );
 }

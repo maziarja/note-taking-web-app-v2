@@ -1,4 +1,5 @@
 "use client";
+import { deleteNote } from "@/app/_actions/note/deleteNote";
 import { useNote } from "@/app/_context/NoteContext";
 import {
   AlertDialog,
@@ -22,13 +23,27 @@ type Props = {
 
 function DeleteNoteDialog({ children, noteId }: Props) {
   const router = useRouter();
-  const { dispatch } = useNote();
+  const { notes, dispatch, userAuthenticated } = useNote();
 
-  function handleDeleteNote() {
+  async function handleDeleteNote() {
+    const noteToDelete = notes.find((note) => note.id === noteId);
+
     if (noteId) dispatch({ type: "deleted_note", payload: noteId });
-    router.push("/");
-    toast.success("Note permanently deleted.");
+
+    try {
+      if (userAuthenticated && noteId) await deleteNote(noteId);
+
+      router.push("/app");
+      toast.success("Note permanently deleted.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete. Changes reverted.");
+
+      if (noteToDelete)
+        dispatch({ type: "restore_deleted_note", payload: noteToDelete });
+    }
   }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>

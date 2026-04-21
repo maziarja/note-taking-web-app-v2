@@ -1,55 +1,55 @@
 "use client";
 
-import {
-  ChevronRightIcon,
-  LockKeyholeIcon,
-  LogOutIcon,
-  SunIcon,
-  TypeIcon,
-} from "lucide-react";
+import { useNoteUI } from "@/app/_context/NoteUIContext";
+import { ChevronRightIcon, SunIcon, TypeIcon } from "lucide-react";
 import Link from "next/link";
-import { Separator } from "../ui/separator";
-import { usePathname } from "next/navigation";
 
 function Settings() {
-  const pathname = usePathname();
+  const { setShowCreateNote, setShowSettings, showSettings } = useNoteUI();
 
   return (
     <div className="space-y-2">
       <Link
-        href={"/settings/color-theme"}
-        className={`text-preset-4 flex items-center gap-2 rounded-md p-2 py-2 ${pathname === "/settings/color-theme" ? "bg-secondary" : ""}`}
+        href={"/app/settings/color-theme"}
+        className={`text-preset-4 flex items-center gap-2 rounded-md p-2 py-2 lg:hidden`}
+      >
+        <SunIcon size={20} />
+        <span>Color Theme</span>
+        <ChevronRightIcon className={`ml-auto hidden size-4 md:inline-block`} />
+      </Link>
+      <Link
+        href={"/app/settings/font-theme"}
+        className={`text-preset-4 flex items-center gap-2 rounded-md p-2 py-2 lg:hidden`}
+      >
+        <TypeIcon size={20} />
+        <span>Font Theme</span>
+        <ChevronRightIcon className={`ml-auto hidden size-4 md:inline-block`} />
+      </Link>
+      <button
+        onClick={() => {
+          setShowSettings("color-theme");
+          setShowCreateNote(false);
+        }}
+        className={`text-preset-4 hidden w-full items-center gap-2 rounded-md p-2 py-2 lg:flex ${showSettings === "color-theme" ? "bg-secondary" : ""}`}
       >
         <SunIcon size={20} />
         <span>Color Theme</span>
         <ChevronRightIcon
-          className={`ml-auto hidden size-4 md:inline-block ${pathname === "/settings/color-theme" ? "" : "lg:hidden"}`}
+          className={`ml-auto hidden size-4 md:inline-block ${showSettings === "color-theme" ? "" : "lg:hidden"}`}
         />
-      </Link>
-      <Link
-        href={"/settings/font-theme"}
-        className={`text-preset-4 flex items-center gap-2 rounded-md p-2 py-2 ${pathname === "/settings/font-theme" ? "bg-secondary" : ""}`}
+      </button>
+      <button
+        onClick={() => {
+          setShowSettings("font-theme");
+          setShowCreateNote(false);
+        }}
+        className={`text-preset-4 hidden w-full items-center gap-2 rounded-md p-2 py-2 lg:flex ${showSettings === "font-theme" ? "bg-secondary" : ""}`}
       >
         <TypeIcon size={20} />
         <span>Font Theme</span>
         <ChevronRightIcon
-          className={`ml-auto hidden size-4 md:inline-block ${pathname === "/settings/font-theme" ? "" : "lg:hidden"}`}
+          className={`ml-auto hidden size-4 md:inline-block ${showSettings === "font-theme" ? "" : "lg:hidden"}`}
         />
-      </Link>
-      <Link
-        href={"/settings/change-password"}
-        className={`text-preset-4 flex items-center gap-2 rounded-md p-2 py-2 ${pathname === "/settings/change-password" ? "bg-secondary" : ""}`}
-      >
-        <LockKeyholeIcon size={20} />
-        <span>Change Password</span>
-        <ChevronRightIcon
-          className={`ml-auto hidden size-4 md:inline-block ${pathname === "/settings/change-password" ? "" : "lg:hidden"}`}
-        />
-      </Link>
-      <Separator />
-      <button className="text-preset-4 flex cursor-pointer items-center gap-2 rounded-md p-2 py-2">
-        <LogOutIcon size={20} />
-        <span>Logout</span>
       </button>
     </div>
   );

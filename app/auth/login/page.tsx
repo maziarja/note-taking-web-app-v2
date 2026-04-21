@@ -1,6 +1,6 @@
 import GoogleButton from "@/components/auth/GoogleButton";
+import GuestLoginButton from "@/components/auth/GuestLoginButton";
 import LoginForm from "@/components/auth/LoginForm";
-import Logo from "@/components/shared/Header";
 import LogoIcon from "@/components/shared/LogoIcon";
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@/lib/auth";
@@ -28,6 +28,7 @@ async function Page() {
           Or log in with:
         </p>
         <GoogleButton />
+        <GuestLoginButton />
       </div>
       <Separator />
       <p className="text-preset-5 text-secondary-foreground">

@@ -15,6 +15,7 @@ import {
 import { useNote } from "@/app/_context/NoteContext";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { updateArchivedNote } from "@/app/_actions/note/updateArchivedNote";
 
 type Props = {
   children: React.ReactNode;
@@ -23,26 +24,53 @@ type Props = {
 };
 
 function ArchiveNoteDialog({ children, noteId, mode }: Props) {
-  const { dispatch } = useNote();
+  const { dispatch, userAuthenticated } = useNote();
   const router = useRouter();
 
-  function handleToggleRestoreNote() {
-    if (noteId) dispatch({ type: "toggled_restore_note", payload: noteId });
-    if (mode === "archive") {
-      toast.success("Note archived.", {
-        action: {
-          label: "Archived Notes",
-          onClick: () => router.push("/archived"),
-        },
-      });
-    }
-    if (mode === "restore") {
-      toast.success("Note restored to active notes.", {
-        action: {
-          label: "All Notes",
-          onClick: () => router.push("/"),
-        },
-      });
+  async function handleToggleRestoreNote() {
+    const nextArchivedState = mode === "archive";
+    try {
+      if (mode === "archive" && noteId) {
+        dispatch({
+          type: "set_archived_note",
+          payload: { noteId, isArchived: true },
+        });
+
+        // If user is logged in toggle archived in DB
+        if (userAuthenticated) await updateArchivedNote(noteId, true);
+
+        toast.success("Note archived.", {
+          action: {
+            label: "Archived Notes",
+            onClick: () => router.push("/archived"),
+          },
+        });
+      }
+
+      if (mode === "restore" && noteId) {
+        dispatch({
+          type: "set_archived_note",
+          payload: { noteId, isArchived: false },
+        });
+
+        if (userAuthenticated) await updateArchivedNote(noteId, false);
+
+        toast.success("Note restored to active notes.", {
+          action: {
+            label: "All Notes",
+            onClick: () => router.push("/"),
+          },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed. Changes reverted.");
+
+      if (noteId)
+        dispatch({
+          type: "set_archived_note",
+          payload: { noteId, isArchived: !nextArchivedState },
+        });
     }
   }
 

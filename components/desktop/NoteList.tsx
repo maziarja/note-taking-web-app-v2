@@ -4,16 +4,26 @@ import { useNote } from "@/app/_context/NoteContext";
 import NoteCard from "../home/NoteCard";
 import { useNoteUI } from "@/app/_context/NoteUIContext";
 import { ScrollArea } from "../ui/scroll-area";
-import Link from "next/link";
 import { Separator } from "../ui/separator";
 import React from "react";
 import { useSearchParams } from "next/navigation";
+import EmptyStatesAllNotes from "../note/EmptyStatesAllNotes";
+import EmptyStatesArchivedNotes from "../archived/EmptyStatesArchivedNotes";
+import EmptyStatesSearchedNotes from "../search/EmptyStatesSearchedNotes";
 
 function NoteList() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const { notes } = useNote();
-  const { tag, noteId, isArchivedNotes, setNoteId } = useNoteUI();
+  const {
+    tag,
+    noteId,
+    setNoteMode,
+    noteMode,
+    setTag,
+    setNoteId,
+    setShowCreateNote,
+  } = useNoteUI();
 
   const tagSelectedNotes = notes.filter((note) => note.tags.includes(tag));
 
@@ -32,22 +42,41 @@ function NoteList() {
 
   let selectedNotes = notes;
   if (tag) selectedNotes = tagSelectedNotes;
-  if (isArchivedNotes) selectedNotes = archivedNotes;
+  if (noteMode === "archivedNotes") selectedNotes = archivedNotes;
   if (query) selectedNotes = queryNotes;
 
   const sortedSelectedNotes = selectedNotes.sort(
     (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
   );
 
+  function handleCreateNewNote() {
+    setShowCreateNote(true);
+    setNoteId("");
+    setNoteMode("allNotes");
+    setTag("");
+  }
+
   return (
     <>
-      <Link
-        onClick={() => setNoteId("")}
-        href={"/note/createNewNote"}
-        className="bg-primary text-preset-4 text-primary-foreground inline-block w-full rounded-lg px-4 py-3 text-center"
+      <button
+        onClick={handleCreateNewNote}
+        className="bg-primary text-preset-4 text-primary-foreground w-full rounded-lg px-4 py-3 text-center"
       >
         + Create New Note
-      </Link>
+      </button>
+
+      {query && selectedNotes.length < 1 && <EmptyStatesSearchedNotes />}
+
+      {!query &&
+        !tag &&
+        noteMode === "archivedNotes" &&
+        selectedNotes.length < 1 && <EmptyStatesArchivedNotes />}
+
+      {!query &&
+        !tag &&
+        noteMode === "allNotes" &&
+        selectedNotes.length < 1 && <EmptyStatesAllNotes />}
+
       <ScrollArea className="h-[calc(100vh-175px)]">
         <div className="space-y-4">
           {tag && (

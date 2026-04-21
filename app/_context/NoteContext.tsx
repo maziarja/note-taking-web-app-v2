@@ -2,31 +2,59 @@
 
 import initialNotes from "@/data.json";
 import { NoteType } from "@/lib/schemas/note";
-import { createContext, useContext, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import { getDBNotes } from "../_actions/note/getDBNotes";
+import { getSession } from "../_actions/auth/getSession";
 
 type NoteContextType = {
   dispatch: React.Dispatch<Action>;
   notes: NoteType[];
+  reloadNotes: () => void;
+  userAuthenticated: boolean;
 };
 
 const NoteContext = createContext<NoteContextType | undefined>(undefined);
 
 const initialState = {
-  notes: initialNotes.notes,
+  notes: [],
+  userAuthenticated: false,
+  // notes: initialNotes.notes,
 };
 
 type Action =
+  | { type: "set_notes"; payload: NoteType[] }
   | { type: "added_note"; payload: NoteType }
   | { type: "deleted_note"; payload: string }
-  | { type: "toggled_restore_note"; payload: string }
-  | { type: "updated_note_content"; id: string; payload: string };
+  | {
+      type: "set_archived_note";
+      payload: { noteId: string; isArchived: boolean };
+    }
+  | {
+      type: "updated_note_content";
+      payload: { noteId: string; content: string; title: string };
+    }
+  | { type: "user_authenticated"; payload: boolean }
+  | { type: "restore_deleted_note"; payload: NoteType };
 
 type State = {
   notes: NoteType[];
+  userAuthenticated: boolean;
 };
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
+    case "set_notes": {
+      return {
+        ...state,
+        notes: action.payload,
+      };
+    }
     case "added_note": {
       return {
         ...state,
@@ -39,12 +67,20 @@ function reducer(state: State, action: Action) {
         notes: state.notes.filter((note) => note.id !== action.payload),
       };
     }
-    case "toggled_restore_note": {
+
+    case "restore_deleted_note": {
+      return {
+        ...state,
+        notes: [action.payload, ...state.notes],
+      };
+    }
+
+    case "set_archived_note": {
       return {
         ...state,
         notes: state.notes.map((note) =>
-          note.id === action.payload
-            ? { ...note, isArchived: !note.isArchived }
+          note.id === action.payload.noteId
+            ? { ...note, isArchived: action.payload.isArchived }
             : note,
         ),
       };
@@ -54,8 +90,21 @@ function reducer(state: State, action: Action) {
       return {
         ...state,
         notes: state.notes.map((note) =>
-          note.id === action.id ? { ...note, content: action.payload } : note,
+          note.id === action.payload.noteId
+            ? {
+                ...note,
+                content: action.payload.content,
+                title: action.payload.title,
+              }
+            : note,
         ),
+      };
+    }
+
+    case "user_authenticated": {
+      return {
+        ...state,
+        userAuthenticated: action.payload,
       };
     }
 
@@ -66,13 +115,35 @@ function reducer(state: State, action: Action) {
 }
 
 export function NoteProvider({ children }: { children: React.ReactNode }) {
-  const [{ notes }, dispatch] = useReducer(reducer, initialState);
+  const [{ notes, userAuthenticated }, dispatch] = useReducer(
+    reducer,
+    initialState,
+  );
+  const [reloadNote, setReloadNote] = useState(0);
+  const reloadNotes = () => setReloadNote((v) => v + 1);
+
+  useEffect(() => {
+    async function loadNotes() {
+      const loggedInUser = await getSession();
+      if (loggedInUser) {
+        const dbNotes = await getDBNotes();
+        if (dbNotes) dispatch({ type: "set_notes", payload: dbNotes });
+        dispatch({ type: "user_authenticated", payload: true });
+      } else {
+        dispatch({ type: "set_notes", payload: initialNotes.notes });
+        dispatch({ type: "user_authenticated", payload: false });
+      }
+    }
+    loadNotes();
+  }, [reloadNote]);
 
   return (
     <NoteContext.Provider
       value={{
         dispatch,
         notes,
+        reloadNotes,
+        userAuthenticated,
       }}
     >
       {children}

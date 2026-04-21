@@ -14,9 +14,13 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { login } from "@/app/_actions/auth/login";
+import { useNote } from "@/app/_context/NoteContext";
+import { useRouter } from "next/navigation";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const { reloadNotes } = useNote();
 
   const form = useForm<UserType>({
     resolver: zodResolver(userSchema),
@@ -27,7 +31,9 @@ function LoginForm() {
   });
 
   async function onSubmit(data: UserType) {
+    reloadNotes();
     const result = await login(data);
+    if (result.success) router.push("/app");
     if (result?.error) {
       form.setError("root", { message: result.error });
     }
@@ -85,7 +91,7 @@ function LoginForm() {
           errors={[{ message: form.formState.errors.root.message }]}
         />
       )}
-      <Button size={"xl"} className="w-full">
+      <Button type="submit" size={"xl"} className="w-full">
         Login
       </Button>
     </form>

@@ -14,9 +14,8 @@ function NoteActions() {
   const isArchived = currentNote?.isArchived;
 
   if (!currentNote) return null;
-
   return (
-    <div className="flex flex-col items-center justify-center gap-4 p-4">
+    <div className="flex h-full flex-col items-center gap-4 border-l p-4">
       {!isArchived ? (
         <ArchiveNoteDialog noteId={noteId} mode="archive">
           <Button

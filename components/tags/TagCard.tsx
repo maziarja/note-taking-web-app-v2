@@ -11,7 +11,7 @@ function TagCard() {
     <div className="space-y-4 divide-y pb-10 md:pb-14">
       {tags.map((tag, i) => (
         <Link
-          href={`/tags/${tag}`}
+          href={`/app/tags/${tag}`}
           key={`${tag}-${i}`}
           className="text-text-mute flex items-center gap-2 pb-4"
         >
