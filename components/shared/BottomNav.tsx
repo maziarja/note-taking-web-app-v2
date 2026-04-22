@@ -18,7 +18,7 @@ function BottomNav() {
       <div className="w-full">
         <Link
           href={"/app"}
-          className={`${pathname === "/app" ? "text-primary bg-accent dark:bg-neutral-700" : "stroke-secondary-foreground"} flex w-full max-w-20 flex-col items-center gap-1 justify-self-center rounded-sm py-1`}
+          className={`${pathname === "/app" ? "text-primary bg-accent dark:bg-neutral-700" : "text-secondary-foreground"} flex w-full max-w-20 flex-col items-center gap-1 justify-self-center rounded-sm py-1`}
         >
           <HomeIcon />
           <span className="text-preset-6 hidden md:block">Home</span>

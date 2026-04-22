@@ -42,7 +42,7 @@ function ArchiveNoteDialog({ children, noteId, mode }: Props) {
         toast.success("Note archived.", {
           action: {
             label: "Archived Notes",
-            onClick: () => router.push("/archived"),
+            onClick: () => router.push("/app/archived"),
           },
         });
       }
@@ -58,7 +58,7 @@ function ArchiveNoteDialog({ children, noteId, mode }: Props) {
         toast.success("Note restored to active notes.", {
           action: {
             label: "All Notes",
-            onClick: () => router.push("/"),
+            onClick: () => router.push("/app"),
           },
         });
       }

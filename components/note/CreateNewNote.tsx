@@ -66,7 +66,7 @@ function CreateNewNote() {
 
     toast.success("Note saved successfully!");
     setNoteId(id);
-    router.push("/");
+    router.push("/app");
   }
 
   return (
