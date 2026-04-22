@@ -130,9 +130,12 @@ export function NoteProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function loadNotes() {
-      const loggedInUser = await getSession();
+      const [loggedInUser, dbNotes] = await Promise.all([
+        getSession(),
+        getDBNotes(),
+      ]);
+
       if (loggedInUser) {
-        const dbNotes = await getDBNotes();
         if (dbNotes) dispatch({ type: "set_notes", payload: dbNotes });
         dispatch({ type: "user_authenticated", payload: true });
       } else {
