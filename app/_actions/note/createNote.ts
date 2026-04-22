@@ -4,36 +4,30 @@ import { auth } from "@/lib/auth";
 import connectDB from "@/lib/database";
 import { Notes } from "@/lib/models/Note";
 
-type UpdatedNoteType = {
-  id: string;
+type NewNoteType = {
   title: string;
   content: string;
+  tags: string[];
+  lastEdited: string;
+  isArchived: boolean;
 };
 
-export async function updateNote(updatedNote: UpdatedNoteType) {
+export async function createNote(newNote: NewNoteType) {
   try {
     await connectDB();
-
     const session = await auth();
+
     if (!session) {
       throw new Error("UNAUTHORIZED");
     }
 
-    const userNotes = await Notes.findOne({ userId: session?.user?.id });
+    const userNotes = await Notes.findOne({ userId: session.user?.id });
 
     if (!userNotes) {
       throw new Error("NOT_FOUND");
     }
 
-    const currentNote = userNotes.notes.id(updatedNote.id);
-
-    if (!currentNote) {
-      throw new Error("NOTE_NOT_FOUND");
-    }
-
-    currentNote.content = updatedNote.content;
-    currentNote.title = updatedNote.title;
-    currentNote.lastEdited = new Date().toLocaleString();
+    userNotes.notes.push(newNote);
     await userNotes.save();
   } catch (error) {
     console.error(error);

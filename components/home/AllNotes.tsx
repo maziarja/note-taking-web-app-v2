@@ -9,9 +9,13 @@ function AllNotes() {
 
   if (notes.length < 1) return <EmptyStatesAllNotes />;
 
+  const sortedAllNotes = notes.sort(
+    (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
+  );
+
   return (
     <div className="space-y-1 divide-y pb-10 md:pb-14">
-      {notes.map((note) => (
+      {sortedAllNotes.map((note) => (
         <div key={note.id} className="py-1">
           <NoteCard note={note} key={note.id} />
         </div>

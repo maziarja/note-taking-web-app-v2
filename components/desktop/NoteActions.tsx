@@ -17,7 +17,7 @@ function NoteActions() {
   return (
     <div className="flex h-full flex-col items-center gap-4 border-l p-4">
       {!isArchived ? (
-        <ArchiveNoteDialog noteId={noteId} mode="archive">
+        <ArchiveNoteDialog isDesktop={true} noteId={noteId} mode="archive">
           <Button
             variant={"outline"}
             size={"xl"}
@@ -31,7 +31,7 @@ function NoteActions() {
           </Button>
         </ArchiveNoteDialog>
       ) : (
-        <ArchiveNoteDialog noteId={noteId} mode={"restore"}>
+        <ArchiveNoteDialog isDesktop={true} noteId={noteId} mode={"restore"}>
           <Button
             variant={"outline"}
             size={"xl"}

@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { updateNote } from "@/app/_actions/note/updateNote";
 
 function NoteDetails() {
-  const { notes, dispatch } = useNote();
+  const { notes, dispatch, userAuthenticated } = useNote();
   const { id: noteId } = useParams();
   const { noteId: noteIdForDesktop } = useNoteUI();
   const ids = (noteId as string) || noteIdForDesktop;
@@ -65,6 +65,7 @@ function NoteDetails() {
   async function handleSaveNote() {
     const prevTitle = currentNote?.title;
     const prevContent = currentNote?.content;
+    const prevLastEdited = currentNote?.lastEdited;
 
     if (ids && currentNote) {
       dispatch({
@@ -73,6 +74,7 @@ function NoteDetails() {
           noteId: ids,
           content: content || currentNote.content,
           title: title || currentNote.title,
+          lastEdited: new Date().toLocaleString(),
         },
       });
 
@@ -83,27 +85,26 @@ function NoteDetails() {
           content: content || currentNote.content,
         };
 
-        await updateNote(updatedNote);
+        if (userAuthenticated) await updateNote(updatedNote);
 
         toast.success("Note saved successfully!");
       } catch (error) {
         console.error(error);
         toast.error("Failed to save. Changes reverted.");
 
-        if (prevContent && prevTitle)
+        if (prevContent && prevTitle && prevLastEdited)
           dispatch({
             type: "updated_note_content",
             payload: {
               noteId: ids,
               content: prevContent,
               title: prevTitle,
+              lastEdited: prevLastEdited,
             },
           });
       }
     }
   }
-
-  // update last Edited when update a note
 
   if (!currentNote) return null;
   return (

@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { login } from "@/app/_actions/auth/login";
 import { useNote } from "@/app/_context/NoteContext";
 import { useRouter } from "next/navigation";
+import { Spinner } from "../ui/spinner";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -92,7 +93,7 @@ function LoginForm() {
         />
       )}
       <Button type="submit" size={"xl"} className="w-full">
-        Login
+        {form.formState.isSubmitting ? <Spinner /> : "Login"}
       </Button>
     </form>
   );

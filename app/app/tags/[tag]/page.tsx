@@ -17,7 +17,7 @@ async function Page({ params }: Props) {
     <Container>
       <div className="space-y-4">
         <Link
-          href={"/tags"}
+          href={"/app/tags"}
           className="text-secondary-foreground text-preset-5 flex items-center gap-1"
         >
           <ChevronLeftIcon size={18} />

@@ -252,3 +252,12 @@ p.is-editor-empty:first-child::before {
     @apply font-sans;
   }
 }
+
+/* iOS Safari fix: prevent zoom on input focus */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* only applies on iOS */
+  }
+}

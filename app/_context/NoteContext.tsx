@@ -37,7 +37,12 @@ type Action =
     }
   | {
       type: "updated_note_content";
-      payload: { noteId: string; content: string; title: string };
+      payload: {
+        noteId: string;
+        content: string;
+        title: string;
+        lastEdited: string;
+      };
     }
   | { type: "user_authenticated"; payload: boolean }
   | { type: "restore_deleted_note"; payload: NoteType };
@@ -95,6 +100,7 @@ function reducer(state: State, action: Action) {
                 ...note,
                 content: action.payload.content,
                 title: action.payload.title,
+                lastEdited: action.payload.lastEdited,
               }
             : note,
         ),

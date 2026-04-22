@@ -10,9 +10,13 @@ function ArchivedNotes() {
 
   if (archivedNotes.length === 0) return <EmptyStatesArchivedNotes />;
 
+  const sortedArchivedNotes = archivedNotes.sort(
+    (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
+  );
+
   return (
     <div className="space-y-1 divide-y pb-10 md:pb-14">
-      {archivedNotes.map((note) => (
+      {sortedArchivedNotes.map((note) => (
         <div key={note.id} className="py-1">
           <NoteCard note={note} />
         </div>

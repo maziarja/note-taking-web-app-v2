@@ -13,10 +13,11 @@ import { useNote } from "@/app/_context/NoteContext";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { useNoteUI } from "@/app/_context/NoteUIContext";
+import { createNote } from "@/app/_actions/note/createNote";
 
 function CreateNewNote() {
   const [content, setContent] = useState("");
-  const { dispatch } = useNote();
+  const { dispatch, userAuthenticated, notes } = useNote();
   const { setNoteId } = useNoteUI();
   const router = useRouter();
   const editor = useEditor({
@@ -38,7 +39,7 @@ function CreateNewNote() {
     },
   });
 
-  function handleSubmitForm(e: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmitForm(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title") as string;
@@ -50,6 +51,7 @@ function CreateNewNote() {
       return;
     }
 
+    const prevNotes = notes;
     const id = crypto.randomUUID();
 
     dispatch({
@@ -58,15 +60,35 @@ function CreateNewNote() {
         id,
         title,
         content,
-        lastEdited: new Date().toDateString(),
+        lastEdited: new Date().toLocaleString(),
         isArchived: false,
         tags: formattedTags,
       },
     });
 
-    toast.success("Note saved successfully!");
-    setNoteId(id);
-    router.push("/app");
+    try {
+      if (userAuthenticated)
+        await createNote({
+          title,
+          content,
+          lastEdited: new Date().toLocaleString(),
+          isArchived: false,
+          tags: formattedTags,
+        });
+
+      toast.success("Note saved successfully!");
+      setNoteId(id);
+      router.push("/app");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed. Changes reverted.");
+
+      // rollback for optimistic UI
+      dispatch({
+        type: "set_notes",
+        payload: prevNotes,
+      });
+    }
   }
 
   return (

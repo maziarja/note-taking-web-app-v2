@@ -16,15 +16,23 @@ import { useNote } from "@/app/_context/NoteContext";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { updateArchivedNote } from "@/app/_actions/note/updateArchivedNote";
+import { useNoteUI } from "@/app/_context/NoteUIContext";
 
 type Props = {
   children: React.ReactNode;
   noteId: string | undefined;
   mode: "archive" | "restore";
+  isDesktop?: boolean;
 };
 
-function ArchiveNoteDialog({ children, noteId, mode }: Props) {
+function ArchiveNoteDialog({
+  children,
+  noteId,
+  mode,
+  isDesktop = false,
+}: Props) {
   const { dispatch, userAuthenticated } = useNote();
+  const { noteState } = useNoteUI();
   const router = useRouter();
 
   async function handleToggleRestoreNote() {
@@ -36,13 +44,14 @@ function ArchiveNoteDialog({ children, noteId, mode }: Props) {
           payload: { noteId, isArchived: true },
         });
 
-        // If user is logged in toggle archived in DB
         if (userAuthenticated) await updateArchivedNote(noteId, true);
 
         toast.success("Note archived.", {
           action: {
             label: "Archived Notes",
-            onClick: () => router.push("/app/archived"),
+            onClick: () => {
+              isDesktop ? noteState("archived") : router.push("/app/archived");
+            },
           },
         });
       }
@@ -58,14 +67,16 @@ function ArchiveNoteDialog({ children, noteId, mode }: Props) {
         toast.success("Note restored to active notes.", {
           action: {
             label: "All Notes",
-            onClick: () => router.push("/app"),
+            onClick: () => {
+              isDesktop ? noteState("all") : router.push("/app");
+            },
           },
         });
       }
     } catch (error) {
       console.error(error);
       toast.error("Failed. Changes reverted.");
-
+      // rollback for optimistic UI
       if (noteId)
         dispatch({
           type: "set_archived_note",
