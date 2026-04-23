@@ -67,7 +67,7 @@ function CreateNewNote() {
     });
 
     try {
-      if (userAuthenticated)
+      if (userAuthenticated) {
         await createNote({
           title,
           content,
@@ -75,10 +75,10 @@ function CreateNewNote() {
           isArchived: false,
           tags: formattedTags,
         });
-
-      toast.success("Note saved successfully!");
+        window.location.href = "/app";
+      }
       setNoteId(id);
-      router.push("/app");
+      toast.success("Note saved successfully!");
     } catch (error) {
       console.error(error);
       toast.error("Failed. Changes reverted.");
@@ -129,7 +129,7 @@ function CreateNewNote() {
           <div className="flex grow items-center gap-1.5">
             <textarea
               name="tags"
-              className="text-preset-6 placeholder:text-preset-6 w-full resize-none outline-none"
+              className="text-preset-6 placeholder:text-preset-6 ring-ring w-full resize-none rounded-lg py-1.5 pl-1 outline-none focus:ring"
               placeholder="Add tags separated by commas (e.g. Work, Planning)"
             />
           </div>

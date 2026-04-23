@@ -12,13 +12,9 @@ function TagSelectedNotes({ tag }: Props) {
 
   const tagSelectedNotes = notes.filter((note) => note.tags.includes(tag));
 
-  const sortedTagSelectedNotes = tagSelectedNotes.sort(
-    (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
-  );
-
   return (
     <div className="space-y-1 divide-y pb-10 md:pb-14">
-      {sortedTagSelectedNotes.map((note) => (
+      {tagSelectedNotes.map((note) => (
         <div key={note.id} className="py-1">
           <NoteCard note={note} />
         </div>

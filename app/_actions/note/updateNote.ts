@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/database";
 import { Notes } from "@/lib/models/Note";
+import { updateNoteSchema } from "@/lib/schemas/note";
 
 type UpdatedNoteType = {
   id: string;
@@ -31,8 +32,14 @@ export async function updateNote(updatedNote: UpdatedNoteType) {
       throw new Error("NOTE_NOT_FOUND");
     }
 
-    currentNote.content = updatedNote.content;
-    currentNote.title = updatedNote.title;
+    const validUpdatedNotes = updateNoteSchema.safeParse(updatedNote);
+
+    if (!validUpdatedNotes.success) {
+      throw new Error(validUpdatedNotes.error.issues[0].message);
+    }
+
+    currentNote.content = validUpdatedNotes.data.content;
+    currentNote.title = validUpdatedNotes.data.title;
     currentNote.lastEdited = new Date().toLocaleString();
     await userNotes.save();
   } catch (error) {

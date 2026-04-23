@@ -7,7 +7,6 @@ import { Notes } from "@/lib/models/Note";
 export async function deleteNote(noteId: string) {
   try {
     await connectDB();
-
     const session = await auth();
 
     if (!session) {

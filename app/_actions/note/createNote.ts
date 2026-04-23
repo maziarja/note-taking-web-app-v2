@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/database";
 import { Notes } from "@/lib/models/Note";
+import { createNoteSchema } from "@/lib/schemas/note";
 
 type NewNoteType = {
   title: string;
@@ -27,7 +28,13 @@ export async function createNote(newNote: NewNoteType) {
       throw new Error("NOT_FOUND");
     }
 
-    userNotes.notes.push(newNote);
+    const validNewNote = createNoteSchema.safeParse(newNote);
+
+    if (!validNewNote.success) {
+      throw new Error(validNewNote.error.issues[0].message);
+    }
+
+    userNotes.notes.push(validNewNote.data);
     await userNotes.save();
   } catch (error) {
     console.error(error);

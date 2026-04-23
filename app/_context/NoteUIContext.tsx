@@ -29,7 +29,12 @@ export function NoteUIProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [tag, setTag] = useState("");
-  const [noteId, setNoteId] = useState(notes[0]?.id);
+
+  const sortedNotes = notes.sort(
+    (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
+  );
+
+  const [noteId, setNoteId] = useState(sortedNotes[0]?.id);
   const [noteMode, setNoteMode] = useState<"allNotes" | "archivedNotes" | "">(
     "allNotes",
   );
@@ -39,7 +44,7 @@ export function NoteUIProvider({ children }: { children: React.ReactNode }) {
   >("");
 
   useEffect(() => {
-    setNoteId(notes[0]?.id);
+    setNoteId(sortedNotes[0]?.id);
   }, [notes]);
 
   function noteState(state: "all" | "archived" | "tag", tag?: string) {

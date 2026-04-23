@@ -24,7 +24,6 @@ type Props = {
 function DeleteNoteDialog({ children, noteId }: Props) {
   const router = useRouter();
   const { notes, dispatch, userAuthenticated } = useNote();
-
   async function handleDeleteNote() {
     const noteToDelete = notes.find((note) => note.id === noteId);
 

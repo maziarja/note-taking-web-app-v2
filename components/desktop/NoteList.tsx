@@ -45,10 +45,6 @@ function NoteList() {
   if (noteMode === "archivedNotes") selectedNotes = archivedNotes;
   if (query) selectedNotes = queryNotes;
 
-  const sortedSelectedNotes = selectedNotes.sort(
-    (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
-  );
-
   function handleCreateNewNote() {
     setShowCreateNote(true);
     setNoteId("");
@@ -85,7 +81,7 @@ function NoteList() {
             </p>
           )}
           <div className="space-y-1 rounded-2xl">
-            {sortedSelectedNotes.map((note, i) => (
+            {selectedNotes.map((note, i) => (
               <React.Fragment key={note.id}>
                 <div
                   className={`cursor-pointer rounded-md p-2 ${noteId === note.id ? "bg-secondary" : ""}`}

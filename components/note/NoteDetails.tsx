@@ -132,7 +132,7 @@ function NoteDetails() {
               <span>Tags</span>
             </div>
             <div className="flex grow items-center gap-1.5">
-              <span>Dev, React</span>
+              <span>{currentNote.tags.join(", ")}</span>
             </div>
           </div>
           {currentNote?.isArchived && (
