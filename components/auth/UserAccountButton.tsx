@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { logout } from "@/app/_actions/auth/logout";
+import { useNote } from "@/app/_context/NoteContext";
 
 type Props = {
   isLoggedIn: boolean;
@@ -19,6 +20,7 @@ type Props = {
 
 function UserAccountButton({ isLoggedIn }: Props) {
   const router = useRouter();
+  const { dispatch } = useNote();
 
   return (
     <>
@@ -35,7 +37,12 @@ function UserAccountButton({ isLoggedIn }: Props) {
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem onClick={async () => logout()}>
+              <DropdownMenuItem
+                onClick={async () => {
+                  dispatch({ type: "user_authenticated", payload: false });
+                  logout();
+                }}
+              >
                 <LogOutIcon />
                 Logout
               </DropdownMenuItem>

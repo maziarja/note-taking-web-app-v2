@@ -21,7 +21,7 @@ import { Spinner } from "../ui/spinner";
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { reloadNotes } = useNote();
+  const { reloadNotes, dispatch } = useNote();
 
   const form = useForm<UserType>({
     resolver: zodResolver(userSchema),
@@ -32,9 +32,12 @@ function LoginForm() {
   });
 
   async function onSubmit(data: UserType) {
-    reloadNotes();
     const result = await login(data);
-    if (result.success) router.push("/app");
+    if (result.success) {
+      dispatch({ type: "user_authenticated", payload: true });
+      await reloadNotes();
+      router.push("/app");
+    }
     if (result?.error) {
       form.setError("root", { message: result.error });
     }

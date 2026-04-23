@@ -7,6 +7,9 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { NoteUIProvider } from "./_context/NoteUIContext";
 import { SessionProvider } from "./_context/SessionContext";
+import { getSession } from "./_actions/auth/getSession";
+import { getDBNotes } from "./_actions/note/getDBNotes";
+import initialNotes from "@/data.json";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,11 +37,18 @@ export const metadata: Metadata = {
     "A modern note-taking app that helps you capture, organize, and manage your ideas effortlessly in one place.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [loggedInUser, dbNotes] = await Promise.all([
+    getSession(),
+    getDBNotes(),
+  ]);
+
+  const notes = loggedInUser ? (dbNotes ?? []) : initialNotes.notes;
+
   return (
     <html
       lang="en"
@@ -64,7 +74,7 @@ export default function RootLayout({
       </head>
       <body className="bg-secondary lg:bg-background flex min-h-dvh flex-col">
         <SessionProvider>
-          <NoteProvider>
+          <NoteProvider initialNotes={notes} userAuthenticated={!!loggedInUser}>
             <NoteUIProvider>
               <ThemeProvider
                 attribute="class"

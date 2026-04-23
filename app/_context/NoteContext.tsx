@@ -2,30 +2,18 @@
 
 import initialNotes from "@/data.json";
 import { NoteType } from "@/lib/schemas/note";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { createContext, useContext, useReducer } from "react";
 import { getDBNotes } from "../_actions/note/getDBNotes";
 import { getSession } from "../_actions/auth/getSession";
 
 type NoteContextType = {
   dispatch: React.Dispatch<Action>;
   notes: NoteType[];
-  reloadNotes: () => void;
+  reloadNotes(): Promise<void>;
   userAuthenticated: boolean;
 };
 
 const NoteContext = createContext<NoteContextType | undefined>(undefined);
-
-const initialState = {
-  notes: [],
-  userAuthenticated: false,
-  // notes: initialNotes.notes,
-};
 
 type Action =
   | { type: "set_notes"; payload: NoteType[] }
@@ -120,31 +108,34 @@ function reducer(state: State, action: Action) {
   }
 }
 
-export function NoteProvider({ children }: { children: React.ReactNode }) {
-  const [{ notes, userAuthenticated }, dispatch] = useReducer(
-    reducer,
-    initialState,
-  );
-  const [reloadNote, setReloadNote] = useState(0);
-  const reloadNotes = () => setReloadNote((v) => v + 1);
+export function NoteProvider({
+  children,
+  initialNotes,
+  userAuthenticated,
+}: {
+  children: React.ReactNode;
+  initialNotes: NoteType[];
+  userAuthenticated: boolean;
+}) {
+  const [{ notes }, dispatch] = useReducer(reducer, {
+    notes: initialNotes,
+    userAuthenticated,
+  });
 
-  useEffect(() => {
-    async function loadNotes() {
-      const [loggedInUser, dbNotes] = await Promise.all([
-        getSession(),
-        getDBNotes(),
-      ]);
+  async function reloadNotes() {
+    const [loggedInUser, dbNotes] = await Promise.all([
+      getSession(),
+      getDBNotes(),
+    ]);
 
-      if (loggedInUser) {
-        if (dbNotes) dispatch({ type: "set_notes", payload: dbNotes });
-        dispatch({ type: "user_authenticated", payload: true });
-      } else {
-        dispatch({ type: "set_notes", payload: initialNotes.notes });
-        dispatch({ type: "user_authenticated", payload: false });
-      }
+    if (loggedInUser) {
+      dispatch({ type: "set_notes", payload: dbNotes ?? [] });
+      dispatch({ type: "user_authenticated", payload: true });
+    } else {
+      dispatch({ type: "set_notes", payload: initialNotes });
+      dispatch({ type: "user_authenticated", payload: false });
     }
-    loadNotes();
-  }, [reloadNote]);
+  }
 
   return (
     <NoteContext.Provider
