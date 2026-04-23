@@ -163,7 +163,7 @@ function NoteDetails() {
           <EditorContent
             key={currentNote?.id}
             editor={editor}
-            className="text-preset-5 text-text-secondary h-full ring-0 focus:border-0 focus:outline-none focus-visible:border-none focus-visible:outline-0 [&_.ProseMirror]:outline-none [&_.ProseMirror]:focus:outline-none"
+            className="text-preset-5 text-text-secondary h-full text-[16px] ring-0 focus:border-0 focus:outline-none focus-visible:border-none focus-visible:outline-0 [&_.ProseMirror]:outline-none [&_.ProseMirror]:focus:outline-none"
           />
         </ScrollArea>
       </div>

@@ -35,7 +35,7 @@ function SearchInput({ isDesktop = false }: Props) {
         <InputGroupInput
           onChange={handleChangeInput}
           defaultValue={query || ""}
-          className="text-preset-5 capitalize"
+          className="text-preset-5! capitalize"
           placeholder="Search by title, content, or tags..."
         />
         <InputGroupAddon>

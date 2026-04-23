@@ -129,7 +129,7 @@ function CreateNewNote() {
           <div className="flex grow items-center gap-1.5">
             <textarea
               name="tags"
-              className="text-preset-6 w-full resize-none outline-none"
+              className="text-preset-6 placeholder:text-preset-6 w-full resize-none outline-none"
               placeholder="Add tags separated by commas (e.g. Work, Planning)"
             />
           </div>
@@ -148,7 +148,7 @@ function CreateNewNote() {
         <EditorContent
           editor={editor}
           placeholder="Start typing your note here..."
-          className="text-preset-5 text-text-secondary h-full text-balance ring-0 focus:border-0 focus:outline-none focus-visible:border-none focus-visible:outline-0 [&_.ProseMirror]:outline-none [&_.ProseMirror]:focus:outline-none"
+          className="text-preset-5 text-text-secondary h-full text-[16px] text-balance ring-0 focus:border-0 focus:outline-none focus-visible:border-none focus-visible:outline-0 [&_.ProseMirror]:outline-none [&_.ProseMirror]:focus:outline-none"
         />
       </ScrollArea>
 
