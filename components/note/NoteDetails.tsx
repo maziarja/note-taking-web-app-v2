@@ -21,7 +21,6 @@ function NoteDetails() {
   const { noteId: noteIdForDesktop } = useNoteUI();
   const ids = (noteId as string) || noteIdForDesktop;
   const currentNote = notes.find((note) => note.id === ids);
-
   const [content, setContent] = useState(currentNote?.content);
 
   const [title, setTitle] = useState(currentNote?.title);
@@ -49,6 +48,7 @@ function NoteDetails() {
 
   useEffect(() => {
     if (currentNote) setTitle(currentNote.title);
+    if (currentNote) setContent(currentNote.content);
   }, [currentNote]);
 
   useEffect(() => {
@@ -61,6 +61,7 @@ function NoteDetails() {
         errorOnInvalidContent: true,
       });
   }, [editor, currentNote?.content]);
+
   async function handleSaveNote() {
     const prevTitle = currentNote?.title;
     const prevContent = currentNote?.content;
@@ -104,7 +105,6 @@ function NoteDetails() {
       }
     }
   }
-
   if (!currentNote) return null;
   return (
     <div className="flex h-full flex-col gap-3">

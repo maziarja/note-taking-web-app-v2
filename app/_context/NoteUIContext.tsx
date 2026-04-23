@@ -43,10 +43,6 @@ export function NoteUIProvider({ children }: { children: React.ReactNode }) {
     "color-theme" | "font-theme" | ""
   >("");
 
-  useEffect(() => {
-    setNoteId(sortedNotes[0]?.id);
-  }, [notes]);
-
   function noteState(state: "all" | "archived" | "tag", tag?: string) {
     if (state === "all") {
       setTag("");
