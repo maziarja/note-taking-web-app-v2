@@ -61,7 +61,6 @@ function NoteDetails() {
         errorOnInvalidContent: true,
       });
   }, [editor, currentNote?.content]);
-
   async function handleSaveNote() {
     const prevTitle = currentNote?.title;
     const prevContent = currentNote?.content;

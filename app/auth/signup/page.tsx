@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 async function Page() {
   const session = await auth();
   if (session) {
-    redirect("/");
+    redirect("/app");
   }
   return (
     <div className="bg-background flex flex-col items-center gap-4 rounded-xl border px-4 py-10 shadow-[0_8px_12px_0_#f0f0f099] md:px-8 md:py-12 lg:p-12 dark:shadow-none">

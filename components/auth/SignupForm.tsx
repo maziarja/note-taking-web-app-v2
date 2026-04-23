@@ -11,17 +11,19 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "../ui/input-group";
-import { EyeIcon, EyeOffIcon, InfoIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, InfoIcon, Router } from "lucide-react";
 import { Button } from "../ui/button";
 import { signup } from "@/app/_actions/auth/signup";
 import { Spinner } from "../ui/spinner";
 import { login } from "@/app/_actions/auth/login";
 import { importNotesToDB } from "@/app/_actions/note/importNotesToDB";
 import { useNote } from "@/app/_context/NoteContext";
+import { useRouter } from "next/navigation";
 
 function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const { notes } = useNote();
+  const router = useRouter();
+  const { notes, reloadNotes, dispatch } = useNote();
   const form = useForm<UserType>({
     resolver: zodResolver(userSchema),
     defaultValues: {
@@ -32,13 +34,17 @@ function SignupForm() {
 
   async function onSubmit(data: UserType) {
     const result = await signup(data);
-
     if (result.success) {
-      await importNotesToDB(notes, result.userId);
-
-      await login(data);
+      const importResult = await importNotesToDB(notes, result.userId);
+      if (importResult) {
+        const loginResult = await login(data);
+        if (loginResult.success) {
+          dispatch({ type: "user_authenticated", payload: true });
+          await reloadNotes();
+          router.push("/app");
+        }
+      }
     }
-
     if (result?.error) {
       form.setError("root", { message: result.error });
     }

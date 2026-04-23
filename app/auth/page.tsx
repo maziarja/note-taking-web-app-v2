@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 async function Page() {
   const session = await auth();
   if (session) {
-    redirect("/");
+    redirect("/app");
   } else {
     redirect("/auth/login");
   }

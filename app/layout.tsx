@@ -74,7 +74,7 @@ export default async function RootLayout({
       </head>
       <body className="bg-secondary lg:bg-background flex min-h-dvh flex-col">
         <SessionProvider>
-          <NoteProvider initialNotes={notes} userAuthenticated={!!loggedInUser}>
+          <NoteProvider initialNotes={notes} auth={loggedInUser}>
             <NoteUIProvider>
               <ThemeProvider
                 attribute="class"

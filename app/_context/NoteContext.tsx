@@ -1,6 +1,5 @@
 "use client";
 
-import initialNotes from "@/data.json";
 import { NoteType } from "@/lib/schemas/note";
 import { createContext, useContext, useReducer } from "react";
 import { getDBNotes } from "../_actions/note/getDBNotes";
@@ -111,15 +110,15 @@ function reducer(state: State, action: Action) {
 export function NoteProvider({
   children,
   initialNotes,
-  userAuthenticated,
+  auth,
 }: {
   children: React.ReactNode;
   initialNotes: NoteType[];
-  userAuthenticated: boolean;
+  auth: boolean;
 }) {
-  const [{ notes }, dispatch] = useReducer(reducer, {
+  const [{ notes, userAuthenticated }, dispatch] = useReducer(reducer, {
     notes: initialNotes,
-    userAuthenticated,
+    userAuthenticated: auth,
   });
 
   async function reloadNotes() {
@@ -136,7 +135,6 @@ export function NoteProvider({
       dispatch({ type: "user_authenticated", payload: false });
     }
   }
-
   return (
     <NoteContext.Provider
       value={{

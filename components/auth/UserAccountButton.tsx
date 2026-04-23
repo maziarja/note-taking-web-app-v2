@@ -13,6 +13,8 @@ import {
 } from "../ui/dropdown-menu";
 import { logout } from "@/app/_actions/auth/logout";
 import { useNote } from "@/app/_context/NoteContext";
+import DeleteAccountDialog from "./DeleteAccountDialog";
+import initialNotes from "@/data.json";
 
 type Props = {
   isLoggedIn: boolean;
@@ -21,6 +23,12 @@ type Props = {
 function UserAccountButton({ isLoggedIn }: Props) {
   const router = useRouter();
   const { dispatch } = useNote();
+
+  async function logoutUser() {
+    dispatch({ type: "user_authenticated", payload: false });
+    dispatch({ type: "set_notes", payload: initialNotes.notes });
+    await logout();
+  }
 
   return (
     <>
@@ -37,18 +45,17 @@ function UserAccountButton({ isLoggedIn }: Props) {
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={async () => {
-                  dispatch({ type: "user_authenticated", payload: false });
-                  logout();
-                }}
-              >
+              <DropdownMenuItem onClick={logoutUser}>
                 <LogOutIcon />
                 Logout
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <UserRoundXIcon />
-                Delete account
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <DeleteAccountDialog>
+                  <div className="flex items-center gap-1.5">
+                    <UserRoundXIcon />
+                    <span>Delete account</span>
+                  </div>
+                </DeleteAccountDialog>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

@@ -12,6 +12,8 @@ export async function importNotesToDB(notes: NoteType[], userId: string) {
       notes,
     });
     await newNotes.save();
+
+    return { success: true };
   } catch (error) {
     console.error(error);
   }
