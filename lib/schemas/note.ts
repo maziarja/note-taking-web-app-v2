@@ -24,4 +24,5 @@ export const createNoteSchema = z.object({
 export const updateNoteSchema = z.object({
   title: z.string().max(100).min(1),
   content: z.string().max(1000).min(1),
+  lastEdited: z.string(),
 });

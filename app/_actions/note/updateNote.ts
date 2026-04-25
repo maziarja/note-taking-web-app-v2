@@ -9,6 +9,7 @@ type UpdatedNoteType = {
   id: string;
   title: string;
   content: string;
+  lastEdited: string;
 };
 
 export async function updateNote(updatedNote: UpdatedNoteType) {
@@ -40,7 +41,7 @@ export async function updateNote(updatedNote: UpdatedNoteType) {
 
     currentNote.content = validUpdatedNotes.data.content;
     currentNote.title = validUpdatedNotes.data.title;
-    currentNote.lastEdited = new Date().toLocaleString();
+    currentNote.lastEdited = validUpdatedNotes.data.lastEdited;
     await userNotes.save();
   } catch (error) {
     console.error(error);

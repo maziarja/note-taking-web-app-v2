@@ -83,6 +83,7 @@ function NoteDetails() {
           id: ids,
           title: title || currentNote.title,
           content: content || currentNote.content,
+          lastEdited: new Date().toLocaleString(),
         };
 
         if (userAuthenticated) await updateNote(updatedNote);
