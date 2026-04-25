@@ -52,8 +52,11 @@ export default function DeleteAccountDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+          <AlertDialogCancel size={"lg"} variant="outline">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
+            size={"lg"}
             onClick={handleDeleteAccount}
             variant="destructive"
           >
