@@ -16,7 +16,7 @@ const connectDB = async (): Promise<void> => {
   }
 
   try {
-    mongoose.connect(uri, { dbName: "note-taking-web-app-v2" });
+    await mongoose.connect(uri, { dbName: "note-taking-web-app-v2" });
     connected = true;
     console.log("MongoDB Connected Successfully");
   } catch (err) {

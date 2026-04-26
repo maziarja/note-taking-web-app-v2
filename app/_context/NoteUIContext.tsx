@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { useNote } from "./NoteContext";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -30,8 +30,9 @@ export function NoteUIProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [tag, setTag] = useState("");
 
-  const sortedNotes = notes.sort(
-    (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
+  const sortedNotes = useMemo(
+    () => [...notes].sort((a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited)),
+    [notes],
   );
 
   const [noteId, setNoteId] = useState(sortedNotes[0]?.id);

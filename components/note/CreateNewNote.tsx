@@ -44,7 +44,10 @@ function CreateNewNote() {
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title") as string;
     const tags = formData.get("tags") as string;
-    const formattedTags = tags.split(",");
+    const formattedTags = tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
 
     if (title.trim() === "" || tags.trim() === "" || content.trim() === "") {
       toast.error("Please add a title, tags, and note content before saving.");
@@ -60,7 +63,7 @@ function CreateNewNote() {
         id,
         title,
         content,
-        lastEdited: new Date().toLocaleString(),
+        lastEdited: new Date().toISOString(),
         isArchived: false,
         tags: formattedTags,
       },
@@ -71,7 +74,7 @@ function CreateNewNote() {
         await createNote({
           title,
           content,
-          lastEdited: new Date().toLocaleString(),
+          lastEdited: new Date().toISOString(),
           isArchived: false,
           tags: formattedTags,
         });

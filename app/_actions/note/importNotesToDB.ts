@@ -1,7 +1,5 @@
-"use server";
-
 import connectDB from "@/lib/database";
-import { Note, Notes } from "@/lib/models/Note";
+import { Notes } from "@/lib/models/Note";
 import { NoteType } from "@/lib/schemas/note";
 
 export async function importNotesToDB(notes: NoteType[], userId: string) {

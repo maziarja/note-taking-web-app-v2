@@ -11,12 +11,11 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "../ui/input-group";
-import { EyeIcon, EyeOffIcon, InfoIcon, Router } from "lucide-react";
+import { EyeIcon, EyeOffIcon, InfoIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { signup } from "@/app/_actions/auth/signup";
 import { Spinner } from "../ui/spinner";
 import { login } from "@/app/_actions/auth/login";
-import { importNotesToDB } from "@/app/_actions/note/importNotesToDB";
 import { useNote } from "@/app/_context/NoteContext";
 import { useRouter } from "next/navigation";
 
@@ -33,16 +32,13 @@ function SignupForm() {
   });
 
   async function onSubmit(data: UserType) {
-    const result = await signup(data);
+    const result = await signup(data, notes);
     if (result.success) {
-      const importResult = await importNotesToDB(notes, result.userId);
-      if (importResult) {
-        const loginResult = await login(data);
-        if (loginResult.success) {
-          dispatch({ type: "user_authenticated", payload: true });
-          await reloadNotes();
-          router.push("/app");
-        }
+      const loginResult = await login(data);
+      if (loginResult.success) {
+        dispatch({ type: "user_authenticated", payload: true });
+        await reloadNotes();
+        router.push("/app");
       }
     }
     if (result?.error) {

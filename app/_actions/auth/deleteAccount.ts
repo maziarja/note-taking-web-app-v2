@@ -19,5 +19,6 @@ export async function deleteAccount() {
     return { success: true };
   } catch (error) {
     console.error(error);
+    return { success: false };
   }
 }

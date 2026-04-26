@@ -35,7 +35,7 @@ function NoteActions() {
           <Button
             variant={"outline"}
             size={"xl"}
-            aria-label="Delete Note"
+            aria-label="open delete note dialog"
             className="cursor-pointer xl:flex xl:w-full xl:items-center xl:justify-center xl:gap-2"
           >
             <ArchiveRestoreIcon size={20} />

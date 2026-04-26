@@ -3,9 +3,11 @@
 import connectDB from "@/lib/database";
 import { User } from "@/lib/models/User";
 import { userSchema, UserType } from "@/lib/schemas/user";
+import { NoteType } from "@/lib/schemas/note";
+import { importNotesToDB } from "@/app/_actions/note/importNotesToDB";
 import bcrypt from "bcryptjs";
 
-export async function signup(user: UserType) {
+export async function signup(user: UserType, notes: NoteType[]) {
   try {
     await connectDB();
 
@@ -22,7 +24,8 @@ export async function signup(user: UserType) {
     });
 
     await newUser.save();
-    return { success: true, userId: newUser._id.toString() };
+    await importNotesToDB(notes, newUser._id.toString());
+    return { success: true };
   } catch (error: any) {
     console.error(error);
     if (error.code === 11000) {

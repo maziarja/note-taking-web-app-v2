@@ -74,7 +74,7 @@ function NoteDetails() {
           noteId: ids,
           content: content || currentNote.content,
           title: title || currentNote.title,
-          lastEdited: new Date().toLocaleString(),
+          lastEdited: new Date().toISOString(),
         },
       });
 
@@ -83,7 +83,7 @@ function NoteDetails() {
           id: ids,
           title: title || currentNote.title,
           content: content || currentNote.content,
-          lastEdited: new Date().toLocaleString(),
+          lastEdited: new Date().toISOString(),
         };
 
         if (userAuthenticated) await updateNote(updatedNote);

@@ -58,6 +58,7 @@ function NoteToolbar({ editor }: { editor: Editor | null }) {
   const activeHeadingLevel = ([1, 2, 3, 4, 5, 6] as const).find(
     (level) => editorState?.[`isH${level}` as keyof typeof editorState],
   );
+
   const ActiveHeadingIcon = activeHeadingLevel
     ? headingIcons[activeHeadingLevel]
     : null;
@@ -73,7 +74,7 @@ function NoteToolbar({ editor }: { editor: Editor | null }) {
             {ActiveHeadingIcon ? (
               <ActiveHeadingIcon size={18} className="text-foreground" />
             ) : (
-              <span className="text-foreground text-sm font-medium leading-none">
+              <span className="text-foreground text-sm leading-none font-medium">
                 Aa
               </span>
             )}
