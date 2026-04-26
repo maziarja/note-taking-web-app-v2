@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useMemo, useState } from "react";
 import { useNote } from "./NoteContext";
+import { NoteType } from "@/lib/schemas/note";
 import { usePathname, useRouter } from "next/navigation";
 
 type NoteUIContext = {
@@ -20,6 +21,7 @@ type NoteUIContext = {
     React.SetStateAction<"color-theme" | "font-theme" | "">
   >;
   noteState(state: "all" | "archived" | "tag", tag?: string): void;
+  sortedNotes: NoteType[];
 };
 
 const NoteUIContext = createContext<NoteUIContext | undefined>(undefined);
@@ -77,6 +79,7 @@ export function NoteUIProvider({ children }: { children: React.ReactNode }) {
         setShowSettings,
         showSettings,
         noteState,
+        sortedNotes,
       }}
     >
       {children}

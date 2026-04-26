@@ -23,14 +23,15 @@ function NoteList() {
     setTag,
     setNoteId,
     setShowCreateNote,
+    sortedNotes,
   } = useNoteUI();
 
-  const tagSelectedNotes = notes.filter((note) => note.tags.includes(tag));
+  const tagSelectedNotes = sortedNotes.filter((note) => note.tags.includes(tag));
 
-  const archivedNotes = notes.filter((note) => note.isArchived);
+  const archivedNotes = sortedNotes.filter((note) => note.isArchived);
 
   const queryNotes = query
-    ? notes.filter(
+    ? sortedNotes.filter(
         (note) =>
           note.tags.some((tag) =>
             tag.toLowerCase().includes(query.toLowerCase()),
@@ -40,7 +41,7 @@ function NoteList() {
       )
     : [];
 
-  let selectedNotes = notes;
+  let selectedNotes = sortedNotes;
   if (tag) selectedNotes = tagSelectedNotes;
   if (noteMode === "archivedNotes") selectedNotes = archivedNotes;
   if (query) selectedNotes = queryNotes;
