@@ -11,7 +11,6 @@ type UpdatedNoteType = {
   content: string;
   lastEdited: string;
 };
-
 export async function updateNote(updatedNote: UpdatedNoteType) {
   try {
     await connectDB();

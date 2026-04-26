@@ -3,6 +3,7 @@
 import { Editor, useEditorState } from "@tiptap/react";
 import {
   BoldIcon,
+  ChevronDownIcon,
   CodeIcon,
   Heading1Icon,
   Heading2Icon,
@@ -17,6 +18,12 @@ import {
   SquareCodeIcon,
   UnderlineIcon,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function NoteToolbar({ editor }: { editor: Editor | null }) {
   const editorState = useEditorState({
@@ -39,62 +46,60 @@ function NoteToolbar({ editor }: { editor: Editor | null }) {
     }),
   });
 
+  const headingIcons = {
+    1: Heading1Icon,
+    2: Heading2Icon,
+    3: Heading3Icon,
+    4: Heading4Icon,
+    5: Heading5Icon,
+    6: Heading6Icon,
+  } as const;
+
+  const activeHeadingLevel = ([1, 2, 3, 4, 5, 6] as const).find(
+    (level) => editorState?.[`isH${level}` as keyof typeof editorState],
+  );
+  const ActiveHeadingIcon = activeHeadingLevel
+    ? headingIcons[activeHeadingLevel]
+    : null;
+
   return (
     <div className="border-border bg-card mb-3 flex flex-wrap items-center gap-1 rounded-lg border-b p-2 shadow-sm">
-      <button
-        type="button"
-        className={`hover:bg-muted cursor-pointer rounded-md p-1.5 ${editorState?.isH1 ? "bg-muted" : ""}`}
-        onClick={() =>
-          editor?.chain().focus().toggleHeading({ level: 1 }).run()
-        }
-      >
-        <Heading1Icon size={18} className="text-foreground" />
-      </button>
-      <button
-        type="button"
-        className={`hover:bg-muted cursor-pointer rounded-md p-1.5 ${editorState?.isH2 ? "bg-muted" : ""}`}
-        onClick={() =>
-          editor?.chain().focus().toggleHeading({ level: 2 }).run()
-        }
-      >
-        <Heading2Icon size={18} className="text-foreground" />
-      </button>
-      <button
-        type="button"
-        className={`hover:bg-muted cursor-pointer rounded-md p-1.5 ${editorState?.isH3 ? "bg-muted" : ""}`}
-        onClick={() =>
-          editor?.chain().focus().toggleHeading({ level: 3 }).run()
-        }
-      >
-        <Heading3Icon size={18} className="text-foreground" />
-      </button>
-      <button
-        type="button"
-        className={`hover:bg-muted cursor-pointer rounded-md p-1.5 ${editorState?.isH4 ? "bg-muted" : ""}`}
-        onClick={() =>
-          editor?.chain().focus().toggleHeading({ level: 4 }).run()
-        }
-      >
-        <Heading4Icon size={18} className="text-foreground" />
-      </button>
-      <button
-        type="button"
-        className={`hover:bg-muted cursor-pointer rounded-md p-1.5 ${editorState?.isH5 ? "bg-muted" : ""}`}
-        onClick={() =>
-          editor?.chain().focus().toggleHeading({ level: 5 }).run()
-        }
-      >
-        <Heading5Icon size={18} className="text-foreground" />
-      </button>
-      <button
-        type="button"
-        className={`hover:bg-muted cursor-pointer rounded-md p-1.5 ${editorState?.isH6 ? "bg-muted" : ""}`}
-        onClick={() =>
-          editor?.chain().focus().toggleHeading({ level: 6 }).run()
-        }
-      >
-        <Heading6Icon size={18} className="text-foreground" />
-      </button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            className={`hover:bg-muted flex cursor-pointer items-center gap-0.5 rounded-md p-1.5 ${activeHeadingLevel ? "bg-muted" : ""}`}
+          >
+            {ActiveHeadingIcon ? (
+              <ActiveHeadingIcon size={18} className="text-foreground" />
+            ) : (
+              <span className="text-foreground text-sm font-medium leading-none">
+                Aa
+              </span>
+            )}
+            <ChevronDownIcon size={12} className="text-foreground" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          {([1, 2, 3, 4, 5, 6] as const).map((level) => {
+            const Icon = headingIcons[level];
+            const isActive =
+              editorState?.[`isH${level}` as keyof typeof editorState];
+            return (
+              <DropdownMenuItem
+                key={level}
+                className={isActive ? "bg-accent text-accent-foreground" : ""}
+                onSelect={() =>
+                  editor?.chain().focus().toggleHeading({ level }).run()
+                }
+              >
+                <Icon size={16} />
+                Heading {level}
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <button
         type="button"
