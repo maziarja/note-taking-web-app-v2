@@ -1,2 +1,0 @@
-- [Codebase Conventions](conventions.md) — established patterns: server actions own all DB calls, optimistic UI via reducer dispatch + rollback, Zod validation in actions
-- [Recurring Issues](recurring_issues.md) — patterns that have appeared across files to watch for in future reviews
