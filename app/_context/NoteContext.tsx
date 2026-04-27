@@ -1,7 +1,7 @@
 "use client";
 
 import { NoteType } from "@/lib/schemas/note";
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useMemo, useReducer } from "react";
 import { getDBNotes } from "../_actions/note/getDBNotes";
 import { getSession } from "../_actions/auth/getSession";
 
@@ -10,6 +10,7 @@ type NoteContextType = {
   notes: NoteType[];
   reloadNotes(): Promise<void>;
   userAuthenticated: boolean;
+  sortedNotes: NoteType[];
 };
 
 const NoteContext = createContext<NoteContextType | undefined>(undefined);
@@ -121,6 +122,14 @@ export function NoteProvider({
     userAuthenticated: auth,
   });
 
+  const sortedNotes = useMemo(
+    () =>
+      [...notes].sort(
+        (a, b) => +new Date(b.lastEdited) - +new Date(a.lastEdited),
+      ),
+    [notes],
+  );
+
   async function reloadNotes() {
     const [loggedInUser, dbNotes] = await Promise.all([
       getSession(),
@@ -140,6 +149,7 @@ export function NoteProvider({
       value={{
         dispatch,
         notes,
+        sortedNotes,
         reloadNotes,
         userAuthenticated,
       }}

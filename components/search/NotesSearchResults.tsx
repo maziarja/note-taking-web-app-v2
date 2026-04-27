@@ -7,12 +7,12 @@ import { useSearchParams } from "next/navigation";
 import EmptyStatesSearchedNotes from "./EmptyStatesSearchedNotes";
 
 function NotesSearchResults() {
-  const { notes } = useNote();
+  const { sortedNotes } = useNote();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
   const notesSearchResults = query
-    ? notes.filter(
+    ? sortedNotes.filter(
         (note) =>
           note.tags.some((tag) =>
             tag.toLowerCase().includes(query.toLowerCase()),

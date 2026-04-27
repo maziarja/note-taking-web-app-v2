@@ -5,13 +5,13 @@ import NoteCard from "./NoteCard";
 import EmptyStatesAllNotes from "../note/EmptyStatesAllNotes";
 
 function AllNotes() {
-  const { notes } = useNote();
+  const { sortedNotes } = useNote();
 
-  if (notes.length < 1) return <EmptyStatesAllNotes />;
+  if (sortedNotes.length < 1) return <EmptyStatesAllNotes />;
 
   return (
     <div className="space-y-1 divide-y pb-10 md:pb-14">
-      {notes.map((note) => (
+      {sortedNotes.map((note) => (
         <div key={note.id} className="py-1">
           <NoteCard note={note} />
         </div>

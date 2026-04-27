@@ -8,9 +8,11 @@ type Props = {
 };
 
 function TagSelectedNotes({ tag }: Props) {
-  const { notes } = useNote();
+  const { sortedNotes } = useNote();
 
-  const tagSelectedNotes = notes.filter((note) => note.tags.includes(tag));
+  const tagSelectedNotes = sortedNotes.filter((note) =>
+    note.tags.includes(tag),
+  );
 
   return (
     <div className="space-y-1 divide-y pb-10 md:pb-14">

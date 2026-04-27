@@ -5,8 +5,8 @@ import { TagIcon } from "lucide-react";
 import Link from "next/link";
 
 function TagCard() {
-  const { notes } = useNote();
-  const tags = [...new Set(notes.map((note) => note.tags).flat())];
+  const { sortedNotes } = useNote();
+  const tags = [...new Set(sortedNotes.map((note) => note.tags).flat())];
   return (
     <div className="space-y-4 divide-y pb-10 md:pb-14">
       {tags.map((tag, i) => (

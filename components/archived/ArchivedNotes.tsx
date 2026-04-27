@@ -5,8 +5,8 @@ import NoteCard from "../home/NoteCard";
 import EmptyStatesArchivedNotes from "./EmptyStatesArchivedNotes";
 
 function ArchivedNotes() {
-  const { notes } = useNote();
-  const archivedNotes = notes.filter((note) => note.isArchived);
+  const { sortedNotes } = useNote();
+  const archivedNotes = sortedNotes.filter((note) => note.isArchived);
 
   if (archivedNotes.length === 0) return <EmptyStatesArchivedNotes />;
 
